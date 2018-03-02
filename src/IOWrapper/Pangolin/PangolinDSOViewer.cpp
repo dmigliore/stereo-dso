@@ -179,39 +179,25 @@ void PangolinDSOViewer::run() {
   std::string delim(" ");
   std::vector<std::string> results;
   Sophus::Matrix4f gtCam;
-  std::vector<Sophus::Matrix4f> matrix_result;
+  std::vector<Sophus::Matrix4f, Eigen::aligned_allocator<Sophus::Matrix4f>>
+      matrix_result;
 
   while (std::getline(ReadFile, temp)) {
-    std::cerr << "Splitting new line" << std::endl;
-
     split(temp, delim, results);
-    std::cerr << "loading line " << temp << std::endl;
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 4; j++) {
         gtCam(i, j) = atof(results[4 * i + j].c_str());
-        std::cerr << results[4 * i + j].c_str() << std::endl;
       }
     }
-    std::cerr << "End of for" << std::endl;
     gtCam(3, 0) = 0;
     gtCam(3, 1) = 0;
     gtCam(3, 2) = 0;
     gtCam(3, 3) = 1;
-    std::cerr << "End of gtCam" << std::endl;
 
     results.clear();
-    std::cerr << "Reset" << std::endl;
-    std::cerr << matrix_result.size() << std::endl;
-    std::cerr << gtCam << std::endl;
-    for (auto &elem : matrix_result) {
-      std::cerr << elem << std::endl;
-    }
     matrix_result.push_back(gtCam);
-    std::cerr << "Push" << std::endl;
-    std::cerr << "---------------------------------" << std::endl;
   }
   ReadFile.close();
-  std::cerr << "End loading groudtruth" << std::endl;
 
   float yellow[3] = {1, 1, 0};
 
